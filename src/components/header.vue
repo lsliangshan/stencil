@@ -10,7 +10,7 @@
     </div>
     <div class="toolbar">
       <ul>
-        <li>
+        <li v-hover.literal="添加文本组件">
           <a href="javascript:void(0)" @click="addText()">
             <icon name="text-width"></icon>
             <span class="ml8">文本</span>
@@ -71,6 +71,7 @@
   </div>
 </template>
 <style lang="scss" scoped>
+  @import "../assets/css/theme.scss";
   .ml8 {
     margin-left: 8px;
   }
@@ -83,7 +84,7 @@
     top: 0;
     width: 100%;
     height: 52px;
-    background-color: #1c2b36;
+    background-color: $theme;
     color: #7793a7;
     white-space: nowrap;
     z-index: 9000;
@@ -229,9 +230,9 @@
         &:hover {
           .wrapper {
             background-color: #eee;
-            border: 2px solid #202a3a;
+            border: 2px solid $theme_active;
             svg {
-              color: #202a3a;
+              color: $theme_active;
             }
           }
          }
