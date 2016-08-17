@@ -1,0 +1,62 @@
+<template>
+  <div id="editor" class="g-editor" @click="closeAllPopup()">
+    <div id="scene" :style="{width: scene.width+'px'}">
+
+    </div>
+  </div>
+</template>
+<style lang="scss" scoped>
+  #editor {
+    width: calc(100% - 414px);
+    height: calc(100% - 52px);
+    display: flex;
+    background-color: lightgray;
+    position: absolute;
+    left: 150px;
+    top: 52px;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    #scene {
+      /*width: 320px;*/
+      height: 80%;
+      background-color: green;
+    }
+  }
+</style>
+<script>
+  export default {
+    data() {
+      const self = this;
+      let scene;
+      let sceneBox;
+      window.onload = function onload() {
+        scene = document.querySelector('#scene');
+        sceneBox = scene.getBoundingClientRect();
+        self.scene.width = (320 / 568 * sceneBox.height);
+      };
+      window.onresize = function onresize() {
+        scene = document.querySelector('#scene');
+        sceneBox = scene.getBoundingClientRect();
+        self.scene.width = (320 / 568 * sceneBox.height);
+      };
+      return {
+        scene: {
+          width: 320,
+        },
+      };
+    },
+    components: {
+    },
+    methods: {
+      closeAllPopup: function closeAllPopup() {
+        this.$parent.closeAllPopup();
+      },
+    },
+    events: {
+      'append-component': function appenComponent(content) {
+        document.querySelector('#scene').innerHTML += content;
+      },
+    },
+  };
+</script>
