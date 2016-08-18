@@ -10,25 +10,25 @@
     </div>
     <div class="toolbar">
       <ul>
-        <li v-hover.literal="添加文本组件">
+        <li v-hover.literal="点击添加一个<span style='color: #4cae4c; font-size: 14px;'>文本</span>组件">
           <a href="javascript:void(0)" @click="addText()">
             <icon name="text-width"></icon>
             <span class="ml8">文本</span>
           </a>
         </li>
-        <li>
+        <li v-hover.literal="点击添加一个<span style='color: #4cae4c; font-size: 14px;'>图片</span>组件">
           <a href="javascript:void(0)" @click="addImage()">
             <icon name="file-image-o"></icon>
             <span class="ml8">图片</span>
           </a>
         </li>
-        <li>
+        <li v-hover.literal="点击打开组件库">
           <a href="javascript:void(0)" @click="toggleComponents()">
             <icon name="th-large"></icon>
             <span class="ml8">组件库</span>
           </a>
         </li>
-        <li>
+        <li v-hover.literal="点击添加音乐">
           <a href="javascript:void(0)" @click="addMusic()">
             <icon name="music"></icon>
             <span class="ml8">音乐</span>

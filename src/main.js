@@ -33,20 +33,23 @@ Vue.directive('hover', {
 
     const mouseMoveFunc = function mouseMoveFunc(event) {
       const hoverTips = document.querySelector('#ls-hover-tips');
-      const eClientX = event.clientX;
-      const eClientY = event.clientY;
+      const eClientX = event.clientX + 15;
+      const eClientY = event.clientY + 15;
       if (!hoverTips) {
         $('head').eq(0).append(`
           <style>
             #ls-hover-tips {
               position: absolute;
               z-index: 9999;
-              padding: 4px 8px;
+              padding: 6px 10px;
               max-width: 150px;
               border-radius: 4px;
               background-color: rgba(0, 0, 0, 0);
               pointer-events: none;
               display: none;
+              font-size: 13px;
+              color: #fff5ea;
+              line-height: 1.5;
               left: ${eClientX}px;
               top: ${eClientY}px;
             }
@@ -80,7 +83,15 @@ Vue.directive('hover', {
       }
     };
 
+    const mouseLeaveFunc = function mouseLeaveFunc() {
+      const hoverTips = document.querySelector('#ls-hover-tips');
+      if (!!hoverTips) {
+        hoverTips.parentNode.removeChild(hoverTips);
+      }
+    };
+
     this.el.addEventListener('mousemove', mouseMoveFunc, false);
+    this.el.addEventListener('mouseleave', mouseLeaveFunc, false);
   },
 });
 

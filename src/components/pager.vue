@@ -4,11 +4,11 @@
       <li @mouseenter="hoverElem(0)" @mouseleave="unHoverElem()" @click="choosePage($event, 0)">
         <div class="left">
           <div class="left-inner">
-            <div class="arrow-up animated-2" transition="arrowUp" v-show="pageHovered==0" @click="swiftUp(0)">
+            <div class="arrow-up animated-2" transition="arrowUp" v-show="pageHovered==0" @click="swiftUp(0)" v-hover.literal="点击与上一页交换">
               <icon name="arrow-up"></icon>
             </div>
             <p>1</p>
-            <div class="arrow-down animated-2" transition="arrowDown" v-show="pageHovered==0" @click="swiftDown(0)">
+            <div class="arrow-down animated-2" transition="arrowDown" v-show="pageHovered==0" @click="swiftDown(0)" v-hover.literal="点击与下一页交换">
               <icon name="arrow-down"></icon>
             </div>
           </div>
@@ -16,17 +16,17 @@
         <div class="main"></div>
         <div class="right">
           <div class="right-inner">
-            <div class="close animated-2" transition="pageClose" v-show="pageHovered==0" @click="removePage(0)">
+            <div class="close animated-2" transition="pageClose" v-show="pageHovered==0" @click="removePage(0)" v-hover.literal="点击删除当前页">
               <icon name="remove"></icon>
             </div>
-            <div class="copy animated-2" transition="pageCopy" v-show="pageHovered==0" @click="copyPage(0)">
+            <div class="copy animated-2" transition="pageCopy" v-show="pageHovered==0" @click="copyPage(0)" v-hover.literal="点击复制当前页">
               <icon name="clipboard"></icon>
             </div>
           </div>
         </div>
       </li>
     </ul>
-    <div class="pager-footer">
+    <div class="pager-footer" v-hover.literal="点击新增一页">
       <icon name="plus"></icon>
     </div>
   </div>
