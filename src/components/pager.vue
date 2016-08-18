@@ -1,25 +1,49 @@
 <template>
   <div class="g-pager" @click="closeAllPopup()">
     <ul>
-      <li @mouseenter="hoverElem(0)" @mouseleave="unHoverElem()" @click="choosePage($event, 0)">
+      <!--<li @mouseenter="hoverElem(0)" @mouseleave="unHoverElem()" @click="choosePage($event, 0)">-->
+        <!--<div class="left">-->
+          <!--<div class="left-inner">-->
+            <!--<div class="arrow-up animated-2" transition="arrowUp" v-show="pageHovered==0" @click="swiftUp(0)" v-hover.literal="点击与上一页交换">-->
+              <!--<icon name="arrow-up"></icon>-->
+            <!--</div>-->
+            <!--<p>1</p>-->
+            <!--<div class="arrow-down animated-2" transition="arrowDown" v-show="pageHovered==0" @click="swiftDown(0)" v-hover.literal="点击与下一页交换">-->
+              <!--<icon name="arrow-down"></icon>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="main"></div>-->
+        <!--<div class="right">-->
+          <!--<div class="right-inner">-->
+            <!--<div class="close animated-2" transition="pageClose" v-show="pageHovered==0" @click="removePage(0)" v-hover.literal="点击删除当前页">-->
+              <!--<icon name="remove"></icon>-->
+            <!--</div>-->
+            <!--<div class="copy animated-2" transition="pageCopy" v-show="pageHovered==0" @click="copyPage(0)" v-hover.literal="点击复制当前页">-->
+              <!--<icon name="clipboard"></icon>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</li>-->
+      <li v-for="page in sTemplates.pages" track-by="$index" @mouseenter="hoverElem($index)" @mouseleave="unHoverElem()" :class="{'active':(activePage==$index)}" @click="choosePage($event, $index)">
         <div class="left">
           <div class="left-inner">
-            <div class="arrow-up animated-2" transition="arrowUp" v-show="pageHovered==0" @click="swiftUp(0)" v-hover.literal="点击与上一页交换">
+            <div class="arrow-up animated-2" transition="arrowUp" v-show="pageHovered==$index" @click="swiftUp($index)" v-hover.literal="点击与上一页交换">
               <icon name="arrow-up"></icon>
             </div>
-            <p>1</p>
-            <div class="arrow-down animated-2" transition="arrowDown" v-show="pageHovered==0" @click="swiftDown(0)" v-hover.literal="点击与下一页交换">
+            <p v-text="$index+1"></p>
+            <div class="arrow-down animated-2" transition="arrowDown" v-show="pageHovered==$index" @click="swiftDown($index)" v-hover.literal="点击与下一页交换">
               <icon name="arrow-down"></icon>
             </div>
           </div>
         </div>
-        <div class="main"></div>
+        <div class="main" :style="{'background-image': (page.bg.type=='image'?'url('+page.bg.value+')':''), 'background-color': (page.bg.type=='color'?page.bg.value:'#fff')}"></div>
         <div class="right">
           <div class="right-inner">
-            <div class="close animated-2" transition="pageClose" v-show="pageHovered==0" @click="removePage(0)" v-hover.literal="点击删除当前页">
+            <div class="close animated-2" transition="pageClose" v-show="pageHovered==$index" @click="removePage($index)" v-hover.literal="点击删除当前页">
               <icon name="remove"></icon>
             </div>
-            <div class="copy animated-2" transition="pageCopy" v-show="pageHovered==0" @click="copyPage(0)" v-hover.literal="点击复制当前页">
+            <div class="copy animated-2" transition="pageCopy" v-show="pageHovered==$index" @click="copyPage($index)" v-hover.literal="点击复制当前页">
               <icon name="clipboard"></icon>
             </div>
           </div>
@@ -52,6 +76,7 @@
         height: 150px;
         cursor: pointer;
         list-style: none;
+        margin-bottom: 4px;
         .left {
           width: 35px;
           height: 100%;
@@ -86,6 +111,8 @@
           background-color: #fff;
           float: left;
           pointer-events: none;
+          background-repeat: no-repeat;
+          background-size: 100% 100%;
         }
         .right {
           display: inline-flex;
@@ -163,7 +190,13 @@
     data() {
       return {
         pageHovered: -1,
+        sTemplates: this.$parent.sTemplates,
       };
+    },
+    computed: {
+      activePage: function activePage() {
+        return this.$parent.active;
+      },
     },
     components: {
       Icon,
@@ -179,8 +212,9 @@
         this.pageHovered = -1;
       },
       choosePage: function choosePage(target, index) {
-        target.target.classList.add('active');
+//        target.target.classList.add('active');
         this.$parent.active = index;
+        this.activePage = index;
       },
       swiftUp: function swiftUp(index) {
         console.log(index);

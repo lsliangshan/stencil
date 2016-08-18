@@ -59,8 +59,16 @@ export default {
         pages: [
           {
             bg: {
-              type: '',   // color: 背景色, image: 背景图
-              value: '',  // 背景 色值或图片地址
+              type: 'image',   // color: 背景色, image: 背景图
+//              value: 'http://img5q.duitang.com/uploads/item/201406/28/20140628141956_ZvJGR.thumb.700_0.jpeg',  // 背景 色值或图片地址
+              value: 'static/img/bg.jpg',  // 背景 色值或图片地址
+            },
+            components: [],
+          },
+          {
+            bg: {
+              type: 'color',   // color: 背景色, image: 背景图
+              value: 'red',  // 背景 色值或图片地址
             },
             components: [],
           },
