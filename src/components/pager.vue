@@ -50,7 +50,7 @@
         </div>
       </li>
     </ul>
-    <div class="pager-footer" v-hover.literal="点击新增一页">
+    <div class="pager-footer" v-hover.literal="点击新增一页" @click="addBlankPage()">
       <icon name="plus"></icon>
     </div>
   </div>
@@ -190,10 +190,12 @@
     data() {
       return {
         pageHovered: -1,
-        sTemplates: this.$parent.sTemplates,
       };
     },
     computed: {
+      sTemplates: function sTemplates() {
+        return this.$parent.sTemplates;
+      },
       activePage: function activePage() {
         return this.$parent.active;
       },
@@ -223,12 +225,34 @@
         alert('swift with down: ');
       },
       removePage: function removePage(index) {
-        console.log(index);
-        alert('remove page');
+        /**
+         * 删除某一页
+         */
+        const pagesLen = this.$parent.sTemplates.pages.length;
+        if (pagesLen < 2) {
+          alert('请留一页');
+        }
+        this.$parent.sTemplates.pages.splice(index, 1);
+//        if (index === this.$parent.active) {
+//
+//        }
       },
       copyPage: function copyPage(index) {
         console.log(index);
         alert('copy page');
+      },
+      addBlankPage: function addBlankPage() {
+        /**
+         * 新增一页
+         */
+        this.$parent.sTemplates.pages.push({
+          bg: {
+            type: 'color',   // color: 背景色, image: 背景图
+            value: '#fff',  // 背景 色值或图片地址
+          },
+          components: [],
+        });
+        this.$parent.active = this.$parent.sTemplates.pages.length - 1;
       },
     },
   };

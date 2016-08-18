@@ -1,6 +1,6 @@
 <template>
   <div id="editor" class="g-editor" @click="closeAllPopup()">
-    <div id="scene" :style="{width: scene.width+'px'}">
+    <div id="scene" :style="{width: scene.width+'px', 'background-image': (sTemplates.pages[activePage].bg.type=='image'?'url('+sTemplates.pages[activePage].bg.value+')':''), 'background-color': (sTemplates.pages[activePage].bg.type=='color'?sTemplates.pages[activePage].bg.value:'#fff')}">
 
     </div>
   </div>
@@ -17,6 +17,8 @@
     z-index: 1000;
     align-items: center;
     justify-content: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
     #scene {
       /*width: 320px;*/
       height: 80%;
@@ -45,6 +47,14 @@
           width: 320,
         },
       };
+    },
+    computed: {
+      activePage: function activePage() {
+        return this.$parent.active;
+      },
+      sTemplates: function sTemplates() {
+        return this.$parent.sTemplates;
+      },
     },
     components: {
     },
