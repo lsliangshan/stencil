@@ -234,24 +234,24 @@
         /**
          * 删除某一页
          */
-        this.showAlert({
-          title: '提示',
-          content: `至少留一页! ${index}`,
-          ok: '好的',
-          type: 'error',
-        });
-//        const pagesLen = this.$parent.sTemplates.pages.length;
-//        if (pagesLen < 2) {
-//          this.showAlert({
-//            title: '提示',
-//            content: '至少留一页!',
-//            ok: '好的',
-//          });
-//        }
-//        this.$parent.sTemplates.pages.splice(index, 1);
-//        if (index === this.$parent.active) {
-//
-//        }
+        const pagesLen = this.$parent.sTemplates.pages.length;
+        if (pagesLen < 2) {
+          this.showAlert({
+            title: '提示',
+            content: `至少留一页! ${index}`,
+            ok: '好的',
+            type: 'error',
+          });
+        } else {
+          if (index === this.$parent.active) {
+            if (index === 0) {
+              this.$parent.active = 0;
+            } else {
+              this.$parent.active -= 1;
+            }
+          }
+          this.$parent.sTemplates.pages.splice(index, 1);
+        }
       },
       copyPage: function copyPage(index) {
         console.log(index);
