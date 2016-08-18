@@ -25,7 +25,7 @@
           <!--</div>-->
         <!--</div>-->
       <!--</li>-->
-      <li v-for="page in sTemplates.pages" track-by="$index" @mouseenter="hoverElem($index)" @mouseleave="unHoverElem()" :class="{'active':(activePage==$index)}" @click="choosePage($event, $index)">
+      <li v-for="page in sTemplates.pages" track-by="$index" @mouseenter="hoverElem($index)" @mouseleave="unHoverElem()" :class="{'active':(activePage==$index)}" @click="choosePage($index)">
         <div class="left">
           <div class="left-inner">
             <div class="arrow-up animated-2" transition="arrowUp" v-show="pageHovered==$index" @click="swiftUp($index)" v-hover.literal="点击与上一页交换">
@@ -211,10 +211,8 @@
       unHoverElem: function unHoverElem() {
         this.pageHovered = -1;
       },
-      choosePage: function choosePage(target, index) {
-//        target.target.classList.add('active');
+      choosePage: function choosePage(index) {
         this.$parent.active = index;
-        this.activePage = index;
       },
       swiftUp: function swiftUp(index) {
         console.log(index);
