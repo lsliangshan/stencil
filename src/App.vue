@@ -25,6 +25,7 @@
     <!--</p>-->
     <com-form></com-form>
   </div>
+  <alert></alert>
 </template>
 
 <script>
@@ -32,6 +33,8 @@ import EditorHeader from './components/header.vue';
 import EditorPager from './components/pager.vue';
 import EditorConfig from './components/config.vue';
 import Editor from './components/editor.vue';
+
+import Alert from './components/utils/alert.vue';
 
 import ComForm from './components/system/comForm.vue';
 
@@ -42,9 +45,17 @@ export default {
     EditorConfig,
     Editor,
     ComForm,
+    Alert,
   },
   data() {
     return {
+      alert: {
+        message: '这是内容',      // 弹框内容
+        title: '提示',            // 弹框标题
+        show: false,            // 是否显示弹框
+        ok: '确认',             // 确认按钮上的文字
+        cancel: '',             // 取消按钮上的文字
+      },
       components: [
 //        {
 //          title: '互动',
@@ -79,6 +90,12 @@ export default {
     };
   },
   methods: {
+    showAlert: function lsAlert(opts, type) {
+      this.$broadcast('show-alert', opts, type);
+    },
+    hideAlert: function hideAlert() {
+      this.$broadcast('hide-alert');
+    },
     addText: function addText(text) {
       this.components = text;
     },

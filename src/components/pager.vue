@@ -204,6 +204,12 @@
       Icon,
     },
     methods: {
+      showAlert: function showAlert(opts, callback) {
+        this.$parent.showAlert(opts, callback);
+      },
+      hideAlert: function hideAlert() {
+        this.$parent.hideAlert();
+      },
       closeAllPopup: function closeAllPopup() {
         this.$parent.closeAllPopup();
       },
@@ -228,11 +234,21 @@
         /**
          * 删除某一页
          */
-        const pagesLen = this.$parent.sTemplates.pages.length;
-        if (pagesLen < 2) {
-          alert('请留一页');
-        }
-        this.$parent.sTemplates.pages.splice(index, 1);
+        this.showAlert({
+          title: '提示',
+          content: `至少留一页! ${index}`,
+          ok: '好的',
+          type: 'error',
+        });
+//        const pagesLen = this.$parent.sTemplates.pages.length;
+//        if (pagesLen < 2) {
+//          this.showAlert({
+//            title: '提示',
+//            content: '至少留一页!',
+//            ok: '好的',
+//          });
+//        }
+//        this.$parent.sTemplates.pages.splice(index, 1);
 //        if (index === this.$parent.active) {
 //
 //        }

@@ -85,8 +85,8 @@ Vue.directive('hover', {
 
     const mouseLeaveFunc = function mouseLeaveFunc() {
       const hoverTips = document.querySelector('#ls-hover-tips');
-      if (!!hoverTips) {
-        hoverTips.parentNode.removeChild(hoverTips);
+      if (!!hoverTips && $('#ls-hover-tips').is(':visible')) {
+        hoverTips.style.display = 'none';
       }
     };
 
