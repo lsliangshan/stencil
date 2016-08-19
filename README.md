@@ -2,8 +2,8 @@
 -----
 
 [![npm version](https://badge.fury.io/js/stencil.svg)](https://badge.fury.io/js/stencil)
-[![Build Status](https://travis-ci.org/lsliangshan/stencil.svg?branch=master)](https://travis-ci.org/richenlin/stencil)
-[![Dependency Status](https://david-dm.org/lsliangshan/stencil.svg)](https://david-dm.org/richenlin/stencil)
+[![Build Status](https://travis-ci.org/lsliangshan/stencil.svg?branch=master)](https://travis-ci.org/lsliangshan/stencil)
+[![Dependency Status](https://david-dm.org/lsliangshan/stencil.svg)](https://david-dm.org/lsliangshan/stencil)
 
 # stencil
 
