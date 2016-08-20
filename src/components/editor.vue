@@ -17,12 +17,12 @@
     z-index: 1000;
     align-items: center;
     justify-content: center;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
     #scene {
       /*width: 320px;*/
       height: 80%;
       background-color: green;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
     }
   }
 </style>

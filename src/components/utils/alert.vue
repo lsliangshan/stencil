@@ -5,6 +5,7 @@
       <div class="ls-alert-content" :class="theme" v-text="alert.message"></div>
       <div class="ls-alert-btns">
         <div class="ls-btn btn-ok" :class="theme" v-text="alert.ok" @click="ok()"></div>
+        <div class="ls-btn btn-cancel" v-text="alert.cancel" v-show="alert.cancel!=''" @click="cancel()"></div>
       </div>
     </div>
   </div>
@@ -80,24 +81,44 @@
           font-size: 12px;
           &.alert-danger {
             background-color: #c12e2a;
+            &:hover {
+              background-color: darken(#c12e2a, 10%);
+            }
           }
           &.alert-success {
             background-color: #419641;
+            &:hover {
+              background-color: darken(#419641, 10%);
+            }
           }
           &.alert-warning {
             background-color: #eb9316;
+            &:hover {
+              background-color: darken(#eb9316, 10%);
+            }
           }
           &.alert-info {
             background-color: #2aabd2;
+            &:hover {
+              background-color: darken(#2aabd2, 10%);
+            }
           }
           &.alert-primary {
             background-color: #265a88;
+            &:hover {
+              background-color: darken(#265a88, 10%);
+            }
+          }
+          &.btn-cancel {
+            background-color: gray;
+            &:hover {
+              background-color: darken(gray, 10%);
+            }
           }
         }
       }
     }
   }
-
 </style>
 <script>
   export default {
@@ -105,6 +126,7 @@
       return {
         theme: 'alert-info',
         callback: '',
+        cancelCallback: '',
       };
     },
     computed: {
@@ -136,9 +158,27 @@
           }
         }
       },
+      cancel: function cancel() {
+        this.$parent.alert.show = false;
+        let args = [];
+        let callback = this.cancelCallback;
+        if (callback !== '') {
+          if (typeof callback === 'string') {
+            if (callback.indexOf('(') > -1) {
+              args = callback.substring(callback.indexOf('(') + 1, callback.indexOf(')')).split(',');
+              callback = callback.substring(0, callback.indexOf('('));
+              window[callback].call(this, args);
+            } else {
+              window[callback].call(this);
+            }
+          } else if (typeof callback === 'function') {
+            callback();
+          }
+        }
+      },
     },
     events: {
-      'show-alert': function showAlert(opts, callback) {
+      'show-alert': function showAlert(opts, callback, cancelCallback) {
         const type = opts.type || 0;
         switch (type) {
           case 0:
@@ -169,7 +209,9 @@
         this.$parent.alert.show = true;
         this.$parent.alert.title = opts.title || '提示';
         this.$parent.alert.ok = opts.ok || '确认';
+        this.$parent.alert.cancel = opts.cancel || '';
         this.callback = callback || '';
+        this.cancelCallback = cancelCallback || '';
       },
       'hide-alert': function hideAlert() {
         this.$parent.alert.show = false;

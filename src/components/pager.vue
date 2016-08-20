@@ -1,38 +1,14 @@
 <template>
   <div class="g-pager" @click="closeAllPopup()">
     <ul>
-      <!--<li @mouseenter="hoverElem(0)" @mouseleave="unHoverElem()" @click="choosePage($event, 0)">-->
-        <!--<div class="left">-->
-          <!--<div class="left-inner">-->
-            <!--<div class="arrow-up animated-2" transition="arrowUp" v-show="pageHovered==0" @click="swiftUp(0)" v-hover.literal="点击与上一页交换">-->
-              <!--<icon name="arrow-up"></icon>-->
-            <!--</div>-->
-            <!--<p>1</p>-->
-            <!--<div class="arrow-down animated-2" transition="arrowDown" v-show="pageHovered==0" @click="swiftDown(0)" v-hover.literal="点击与下一页交换">-->
-              <!--<icon name="arrow-down"></icon>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<div class="main"></div>-->
-        <!--<div class="right">-->
-          <!--<div class="right-inner">-->
-            <!--<div class="close animated-2" transition="pageClose" v-show="pageHovered==0" @click="removePage(0)" v-hover.literal="点击删除当前页">-->
-              <!--<icon name="remove"></icon>-->
-            <!--</div>-->
-            <!--<div class="copy animated-2" transition="pageCopy" v-show="pageHovered==0" @click="copyPage(0)" v-hover.literal="点击复制当前页">-->
-              <!--<icon name="clipboard"></icon>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</li>-->
       <li v-for="page in sTemplates.pages" track-by="$index" @mouseenter="hoverElem($index)" @mouseleave="unHoverElem()" :class="{'active':(activePage==$index)}" @click="choosePage($index)">
         <div class="left">
           <div class="left-inner">
-            <div class="arrow-up animated-2" transition="arrowUp" v-show="pageHovered==$index" @click="swiftUp($index)" v-hover.literal="点击与上一页交换">
+            <div class="arrow-up animated-2" transition="arrowUp" v-show="pageHovered==$index && $index!=0" @click="swiftUp($index)" v-hover.literal="点击与上一页交换">
               <icon name="arrow-up"></icon>
             </div>
             <p v-text="$index+1"></p>
-            <div class="arrow-down animated-2" transition="arrowDown" v-show="pageHovered==$index" @click="swiftDown($index)" v-hover.literal="点击与下一页交换">
+            <div class="arrow-down animated-2" transition="arrowDown" v-show="pageHovered==$index && $index!=(sTemplates.pages.length-1)" @click="swiftDown($index)" v-hover.literal="点击与下一页交换">
               <icon name="arrow-down"></icon>
             </div>
           </div>
@@ -211,6 +187,9 @@
         this.$parent.hideAlert();
       },
       closeAllPopup: function closeAllPopup() {
+        /**
+         * 关闭所有弹框
+         */
         this.$parent.closeAllPopup();
       },
       hoverElem: function hoverElem(index) {
@@ -220,55 +199,94 @@
         this.pageHovered = -1;
       },
       choosePage: function choosePage(index) {
+        /**
+         * 选择某一页
+         * index: 待选择页面的索引值
+         */
         this.$parent.active = index;
       },
       swiftUp: function swiftUp(index) {
-        console.log(index);
-        alert('swift with up: ');
+        /**
+         * 与上一页交换
+         * index: 待交换页面的索引值
+         */
+        const sTemplates = this.$parent.sTemplates;
+        if (index > 0) {
+          sTemplates.pages.splice(index - 1, 0, sTemplates.pages.splice(index, 1)[0]);
+        }
       },
       swiftDown: function swiftDown(index) {
-        console.log(index);
-        alert('swift with down: ');
+        /**
+         * 与下一页交换
+         * index: 待交换页面的索引值
+         */
+        const sTemplates = this.$parent.sTemplates;
+        if (index < sTemplates.pages.length) {
+          sTemplates.pages.splice(index + 1, 0, sTemplates.pages.splice(index, 1)[0]);
+        }
       },
       removePage: function removePage(index) {
         /**
          * 删除某一页
+         * index: 待删除页面的索引值
          */
+        const self = this;
         const pagesLen = this.$parent.sTemplates.pages.length;
-        if (pagesLen < 2) {
-          this.showAlert({
-            title: '提示',
-            content: `至少留一页! ${index}`,
-            ok: '好的',
-            type: 'error',
-          });
-        } else {
-          if (index === this.$parent.active) {
-            if (index === 0) {
-              this.$parent.active = 0;
-            } else {
-              this.$parent.active -= 1;
+        const okCallback = function okCallback() {
+          if (pagesLen < 2) {
+            self.showAlert({
+              title: '提示',
+              content: '至少留一页!',
+              ok: '好的',
+              cancel: '',
+              type: 'error',
+            });
+          } else {
+            if (index === self.$parent.active) {
+              if (index === 0) {
+                self.$parent.active = 0;
+              } else {
+                self.$parent.active -= 1;
+              }
             }
+            self.$parent.sTemplates.pages.splice(index, 1);
           }
-          this.$parent.sTemplates.pages.splice(index, 1);
-        }
+        };
+        this.showAlert({
+          title: '提示',
+          content: '确认删除?',
+          ok: '是的',
+          cancel: '再想想',
+          type: 'info',
+        }, okCallback);
       },
       copyPage: function copyPage(index) {
-        console.log(index);
-        alert('copy page');
+        /**
+         * 复制某一页
+         * index: 待复制页面的索引值
+         */
+        const self = this;
+        const sTemplates = this.$parent.sTemplates;
+        sTemplates.pages.splice(index, 0, sTemplates.pages[index]);
+        const changeActive = function changeActive() {
+          self.$parent.active = index + 1;
+        };
+        setTimeout(changeActive, 20);
       },
       addBlankPage: function addBlankPage() {
         /**
          * 新增一页
+         * 在当前页后新增一页
+         * 默认新增一页背景色为#FFF的页面
          */
-        this.$parent.sTemplates.pages.push({
+        this.$parent.sTemplates.pages.splice(this.$parent.active + 1, 0, {
           bg: {
             type: 'color',   // color: 背景色, image: 背景图
-            value: '#fff',  // 背景 色值或图片地址
+            value: '#FFF',  // 背景 色值或图片地址
           },
           components: [],
         });
-        this.$parent.active = this.$parent.sTemplates.pages.length - 1;
+        this.$parent.active += 1;
       },
     },
   };
