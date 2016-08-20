@@ -293,10 +293,22 @@
     },
     methods: {
       addText: function addText() {
-        this.$parent.addText('文本控件');
+//        this.$parent.addText('文本控件');
+        this.$parent.showToast({
+          type: 'info',
+          animation: 'fadeInUp',
+          duration: 4000,
+          content: '文本控件文本控件文本控件文本控件文本控件文本控件文本控件文本控件文本控件文本控件文本控件',
+        });
       },
       addImage: function addImage() {
-        console.log('add image');
+//        console.log('add image');
+        this.$parent.showToast({
+          type: 'warning',
+          animation: 'rollIn',
+          sticky: true,
+          content: '图片控件',
+        });
       },
       addMusic: function addMusic() {
         console.log('add music');

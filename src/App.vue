@@ -26,6 +26,7 @@
     <com-form></com-form>
   </div>
   <alert></alert>
+  <toast></toast>
 </template>
 
 <script>
@@ -35,6 +36,7 @@ import EditorConfig from './components/config.vue';
 import Editor from './components/editor.vue';
 
 import Alert from './components/utils/alert.vue';
+import Toast from './components/utils/toast.vue';
 
 import ComForm from './components/system/comForm.vue';
 
@@ -46,6 +48,7 @@ export default {
     Editor,
     ComForm,
     Alert,
+    Toast,
   },
   data() {
     return {
@@ -90,11 +93,14 @@ export default {
     };
   },
   methods: {
-    showAlert: function lsAlert(opts, type) {
-      this.$broadcast('show-alert', opts, type);
+    showAlert: function lsAlert(opts, callback, cancelCallback) {
+      this.$broadcast('show-alert', opts, callback, cancelCallback);
     },
     hideAlert: function hideAlert() {
       this.$broadcast('hide-alert');
+    },
+    showToast: function showToast(opts) {
+      this.$broadcast('show-toast', opts);
     },
     addText: function addText(text) {
       this.components = text;
