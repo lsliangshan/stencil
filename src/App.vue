@@ -4,25 +4,6 @@
     <editor-pager></editor-pager>
     <editor-config></editor-config>
     <editor></editor>
-    <!--<img class="logo" src="./assets/logo.png">-->
-    <!--<hello></hello>-->
-    <!--<p>-->
-      <!--Welcome to your Vue.js app!-->
-    <!--</p>-->
-    <!--<p>-->
-      <!--To get a better understanding of how this boilerplate works, check out-->
-      <!--<a href="http://vuejs-templates.github.io/webpack" target="_blank">its documentation</a>.-->
-      <!--It is also recommended to go through the docs for-->
-      <!--<a href="http://webpack.github.io/" target="_blank">Webpack</a> and-->
-      <!--<a href="http://vuejs.github.io/vue-loader/" target="_blank">vue-loader</a>.-->
-      <!--If you have any issues with the setup, please file an issue at this boilerplate's-->
-      <!--<a href="https://github.com/vuejs-templates/webpack" target="_blank">repository</a>.-->
-    <!--</p>-->
-    <!--<p>-->
-      <!--You may also want to checkout-->
-      <!--<a href="https://github.com/vuejs/vue-router/" target="_blank">vue-router</a> for routing and-->
-      <!--<a href="https://github.com/vuejs/vuex/" target="_blank">vuex</a> for state management.-->
-    <!--</p>-->
     <com-form></com-form>
   </div>
   <alert></alert>
@@ -66,6 +47,7 @@ export default {
 //          type: 'com-support',
 //        },
       ],   // 组件库里的组件
+      coms: {},
       pagers: {
         active: 0,
       },
@@ -74,7 +56,6 @@ export default {
           {
             bg: {
               type: 'image',   // color: 背景色, image: 背景图
-//              value: 'http://img5q.duitang.com/uploads/item/201406/28/20140628141956_ZvJGR.thumb.700_0.jpeg',  // 背景 色值或图片地址
               value: 'static/img/bg.jpg',  // 背景 色值或图片地址
             },
             components: [],
@@ -93,6 +74,16 @@ export default {
     };
   },
   methods: {
+    getUID: function getUID(prefix) {
+      const pre = prefix || '';
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+      }
+      const resultFunc = function resultFunc() {
+        return `${pre}${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+      };
+      return (resultFunc)();
+    },
     showAlert: function lsAlert(opts, callback, cancelCallback) {
       this.$broadcast('show-alert', opts, callback, cancelCallback);
     },
@@ -146,12 +137,10 @@ export default {
   },
   events: {
     'update-templates': function updateTemplates(data) {
-      console.log(data);
       this.sTemplates = data;
     },
     'add-component': function updateTemplates(data) {
       this.sTemplates.pages[this.active].components.push(data);
-      console.log(JSON.stringify(this.sTemplates));
     },
     'show-component': function showComponent(content) {
       this.appendComponent(content);

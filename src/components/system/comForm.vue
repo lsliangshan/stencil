@@ -1,20 +1,14 @@
-<template>
-  <div class='render'></div>
-  <div class='config'></div>
-</template>
-<style lang='scss' scoped>
-  .g-pager {
-    width: 150px;
-    height: calc(100% - 52px);
-    display: inline-block;
-    background-color: lightblue;
-    position: absolute;
-    left: 0;
-    top: 52px;
-    z-index: 3000;
-  }
-</style>
 <script>
+  const getId = function getId(prefix) {
+    const pre = prefix || '';
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    }
+    const resultFunc = function resultFunc() {
+      return `${pre}${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+    };
+    return (resultFunc)();
+  };
   const template = {
     type: 'com-form',
     title: '表单',
@@ -111,17 +105,27 @@
       borderColor: '#c8c8c8',
     },
   };
+  const id = getId('form-');
   export default {
     data() {
       this.init();
       return {
         template: {},
+        contentTemplate: `
+          <div class='render k-component' id='content-${id}' v-hover.literal='这是一个表单组件'>
+            <p style='color: red;'>DEMO!</p>
+          </div>
+        `,
+        configTemplate: `
+          <div class='config' id='config-${id}'></div>
+        `,
       };
     },
     components: {
     },
     methods: {
       init: function init() {
+        console.log(this.$parent);
         this.addComponent({
           title: '表单',
           icon: 'th-list',
@@ -134,13 +138,12 @@
       addComponent: function addComponent(data) {
         this.$parent.addComponent(data);
       },
-      createForm: function createForm(data) {
+      create: function create(data) {
         this.$dispatch('add-component', data);
         this.render(data);
       },
-      render: function render(data) {
-        console.log(data);
-        const templateHtml = '<h1>HELLO</h1>';
+      render: function render() {
+        const templateHtml = this.contentTemplate;
         this.closeAllPopup();
         this.$dispatch('show-component', templateHtml);
       },
@@ -148,7 +151,7 @@
     events: {
       'com-create': function comCreate(type) {
         if (type === 'com-form') {
-          this.createForm(template);
+          this.create(template);
         }
       },
       'com-render': function comRender(data) {

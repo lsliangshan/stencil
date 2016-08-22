@@ -65,7 +65,9 @@
     },
     events: {
       'append-component': function appenComponent(content) {
-        document.querySelector('#scene').innerHTML += content;
+        const scene = document.querySelector('#scene');
+        scene.innerHTML += content;
+        this.$compile(scene);
       },
     },
   };
