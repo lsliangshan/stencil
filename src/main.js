@@ -95,6 +95,22 @@ Vue.directive('hover', {
   },
 });
 
+Vue.directive('inputType', {
+  update: function update() {
+    const self = this;
+    const selfElem = self.el;
+    if (['input', 'textarea'].indexOf(selfElem.nodeName.toLowerCase()) < 0) {
+      return;
+    }
+    // 纯数字
+    selfElem.setAttribute('type', 'tel');
+    const undoFunc = function undoFunc() {
+      selfElem.value = selfElem.value.replace(/\D/g, '');
+    };
+    selfElem.addEventListener('input', undoFunc, false);
+  },
+});
+
 /* eslint-disable no-new */
 new Vue({
   el: 'body',

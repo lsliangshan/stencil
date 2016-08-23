@@ -14,31 +14,68 @@
     -moz-transform: rotate(0deg);
     -o-transform: rotate(0deg);
     transform: rotate(0deg);
-    .form-items {
-      .form-item {
-        margin: 0.08rem 10% auto 10%;
-        padding: 0;
-        width: 80%;
-        height: 0.3rem;
-        input {
-          width: 100%;
+    display: flex;
+    align-items: center;
+    form {
+      width: 100%;
+      .form-items {
+        .form-item {
+          margin: 0.08rem 10% auto 10%;
+          padding: 0;
+          width: 80%;
           height: 0.3rem;
-          /*line-height: 1.5;*/
-          padding: 0 0.08rem;
-          outline: none;
-          border: none;
-          border-radius: 0.04rem;
+          input {
+            width: 100%;
+            height: 0.3rem;
+            /*line-height: 1.5;*/
+            padding: 0 0.08rem;
+            outline: none;
+            border: none;
+            border-radius: 0.04rem;
+          }
+          a {
+            width: 90%;
+            margin-left: 10%;
+            height: 0.3rem;
+            color: #fff;
+            border: none;
+            text-shadow: #000 0 0 3px;
+            font-size: 0.14rem;
+            padding: 0;
+            line-height: 0.3rem;
+          }
+          .check-status {
+            position: absolute;
+            right: 0.02rem;
+            top: 0;
+            display: inline;
+            font-size: 0.14rem;
+            color: red;
+            vertical-align: middle;
+            margin: 0;
+            line-height: 0.3rem;
+          }
         }
-        .check-status {
-          position: absolute;
-          right: 0.02rem;
-          top: 0;
-          display: inline;
-          font-size: 0.14rem;
-          color: red;
-          vertical-align: middle;
-          margin: 0;
-          line-height: 0.3rem;
+        .protocol {
+          width: 80%;
+          margin: 8px 10% 0 10%;
+        }
+        .form-submit {
+          margin: 0.08rem 10% auto 10%;
+          padding: 0;
+          width: 80%;
+          height: 0.3rem;
+          a {
+            width: 100%;
+            height: 0.3rem;
+            line-height: 0.2rem;
+            outline: none;
+            border: none;
+            border-radius: 0.04rem;
+            font-size: 0.16rem;
+            color: #fff;
+            text-shadow: #000 0 0 3px;
+          }
         }
       }
     }
@@ -76,20 +113,21 @@
             case 'text':
               selfElem.innerHTML += `<f-text :data="coms['${id}'].items[${i}]"></f-text>`;
               break;
-//            case 'phonenum':
-//              selfElem.innerHTML += `<f-phone :data="components.current[${i}]"></f-phone>`;
-//              break;
+            case 'phonenum':
+              selfElem.innerHTML += `<f-phone :data="coms['${id}'].items[${i}]"></f-phone>`;
+              break;
 //            case 'radio':
-//              selfElem.innerHTML += `<f-radio :data="components.current[${i}]"></f-radio>`;
+//              selfElem.innerHTML += `<f-radio :data="coms['${id}'].items[${i}]"></f-radio>`;
 //              break;
 //            case 'select':
-//              selfElem.innerHTML += `<f-select :data="components.current[${i}]"></f-select>`;
+//              selfElem.innerHTML += `<f-select :data="coms['${id}'].items[${i}]"></f-select>`;
 //              break;
-//            case 'verifycode':
-//              selfElem.innerHTML += `<f-code :data="components.current[${i}]"></f-code>`;
-//              break;
+            case 'verifycode':
+              selfElem.innerHTML += `<f-code :data-color="coms['${id}'].submit.bgColor"
+                          :data="coms['${id}'].items[${i}]"></f-code>`;
+              break;
 //            case 'textarea':
-//              selfElem.innerHTML += `<f-textarea :data="components.current[${i}]"></f-textarea>`;
+//              selfElem.innerHTML += `<f-textarea :data="coms['${id}'].items[${i}]"></f-textarea>`;
 //              break;
             default :
               break;
@@ -115,7 +153,54 @@
     `,
   });
 
+  const fPhone = Vue.extend({
+    props: ['data'],
+    template: `
+      <div class="row m0 p0">
+        <div class="col-xs-12 form-item">
+          <input type="text" :required="data.required" :name="data.name"
+            :placeholder="data.placeholder" v-input-type>
+          <p class="check-status" v-show="data.required">*</p>
+        </div>
+      </div>
+    `,
+  });
+
+  const fCode = Vue.extend({
+    props: ['data', 'data-color'],
+    template: `
+      <div class="row m0 p0 form-item">
+        <div class="col-xs-7 m0 p0">
+          <input type="text" :required="data.required" :name="data.name"
+            :placeholder="data.placeholder" v-input-type>
+          <p class="check-status" v-show="data.required">*</p>
+        </div>
+        <div class="col-xs-5 m0 p0">
+          <a href="javascript:void(0)" class="btn btn-sm" :style="{'background-color': dataColor}">
+            获取
+          </a>
+        </div>
+      </div>
+    `,
+  });
+
+  const fSubmit = Vue.extend({
+    props: ['data'],
+    template: `
+      <div class="row m0 p0">
+        <div class="col-xs-12 form-submit">
+          <a href="javascript:void(0)" class="btn btn-sm"
+            :style="{'background-color': data.bgColor}"
+            v-text="data.label"></a>
+        </div>
+      </div>
+    `,
+  });
+
   Vue.component('f-text', fText);
+  Vue.component('f-phone', fPhone);
+  Vue.component('f-code', fCode);
+  Vue.component('f-submit', fSubmit);
 
   const template = {
     type: 'com-form',
@@ -231,6 +316,14 @@
               <form method="post">
                 <div class="form-items">
                   <div :data='coms["${id}"].items' v-render-form-item></div>
+                  <div class="row m0 p0 protocol">
+                    <div class="col-xs-12 m0 p0">
+                      <a href="javascript:void(0)">活动协议</a>
+                    </div>
+                  </div>
+                  <slot>
+                    <f-submit :data="coms['${id}'].submit"></f-submit>
+                  </slot>
                 </div>
               </form>
             </div>
