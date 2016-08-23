@@ -42,6 +42,7 @@
             text-shadow: #000 0 0 3px;
             font-size: 0.14rem;
             padding: 0;
+            outline: none;
             line-height: 0.3rem;
           }
           .check-status {
@@ -58,7 +59,11 @@
         }
         .protocol {
           width: 80%;
-          margin: 8px 10% 0 10%;
+          margin: 0.08rem 10% 0 10%;
+          font-size: 0.14rem;
+          a {
+            padding: 0.08rem 0;
+          }
         }
         .form-submit {
           margin: 0.08rem 10% auto 10%;
@@ -68,13 +73,14 @@
           a {
             width: 100%;
             height: 0.3rem;
-            line-height: 0.2rem;
+            line-height: 0.3rem;
             outline: none;
             border: none;
             border-radius: 0.04rem;
             font-size: 0.16rem;
             color: #fff;
             text-shadow: #000 0 0 3px;
+            padding: 0;
           }
         }
       }
@@ -316,14 +322,14 @@
               <form method="post">
                 <div class="form-items">
                   <div :data='coms["${id}"].items' v-render-form-item></div>
+                  <slot>
+                    <f-submit :data="coms['${id}'].submit"></f-submit>
+                  </slot>
                   <div class="row m0 p0 protocol">
                     <div class="col-xs-12 m0 p0">
                       <a href="javascript:void(0)">活动协议</a>
                     </div>
                   </div>
-                  <slot>
-                    <f-submit :data="coms['${id}'].submit"></f-submit>
-                  </slot>
                 </div>
               </form>
             </div>
@@ -331,7 +337,7 @@
         `,
         configTemplate: `
           <div class='config' id='config-${id}'>
-            <input v-model='coms["${id}"].title'>
+            <input v-model='coms["${id}"].submit.bgColor'>
           </div>
         `,
       };
