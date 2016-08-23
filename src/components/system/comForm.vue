@@ -16,29 +16,29 @@
     transform: rotate(0deg);
     .form-items {
       .form-item {
-        margin: 8px 10% auto 10%;
+        margin: 0.08rem 10% auto 10%;
         padding: 0;
         width: 80%;
-        height: 30px;
+        height: 0.3rem;
         input {
           width: 100%;
-          height: 30px;
-          line-height: 30px;
-          padding: 0 8px;
+          height: 0.3rem;
+          /*line-height: 1.5;*/
+          padding: 0 0.08rem;
           outline: none;
           border: none;
-          border-radius: 4px;
+          border-radius: 0.04rem;
         }
         .check-status {
           position: absolute;
-          right: 2px;
+          right: 0.02rem;
           top: 0;
           display: inline;
-          font-size: 14px;
+          font-size: 0.14rem;
           color: red;
           vertical-align: middle;
           margin: 0;
-          line-height: 30px;
+          line-height: 0.3rem;
         }
       }
     }
@@ -189,7 +189,7 @@
     defaultStyle: {
       width: '100%',
       height: '100%',
-      fontSize: '100%',
+      fontSize: '0.14rem',
       lineHeight: 1.5,
       left: '0%',
       top: '0%',
@@ -247,7 +247,6 @@
     },
     methods: {
       init: function init() {
-        console.log(this.$parent);
         this.addComponent({
           title: '表单',
           icon: 'th-list',

@@ -32,15 +32,18 @@
       const self = this;
       let scene;
       let sceneBox;
+      const html = document.querySelector('html');
       window.onload = function onload() {
         scene = document.querySelector('#scene');
         sceneBox = scene.getBoundingClientRect();
         self.scene.width = (320 / 568 * sceneBox.height);
+        html.style.fontSize = `${(sceneBox.height / 568.0 * 100)}px`;
       };
       window.onresize = function onresize() {
         scene = document.querySelector('#scene');
         sceneBox = scene.getBoundingClientRect();
         self.scene.width = (320 / 568 * sceneBox.height);
+        html.style.fontSize = `${(sceneBox.height / 568.0 * 100)}px`;
       };
       return {
         scene: {

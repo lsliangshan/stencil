@@ -159,6 +159,7 @@ export default {
   }
 html {
   height: 100%;
+  font-size: 100px;
 }
 
 body {
