@@ -1,4 +1,51 @@
+<style lang="scss">
+  .m0 {
+    margin: 0;
+  }
+  .p0 {
+    padding: 0;
+  }
+  .form-mask {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+    .form-items {
+      .form-item {
+        margin: 8px 10% auto 10%;
+        padding: 0;
+        width: 80%;
+        height: 30px;
+        input {
+          width: 100%;
+          height: 30px;
+          line-height: 30px;
+          padding: 0 8px;
+          outline: none;
+          border: none;
+          border-radius: 4px;
+        }
+        .check-status {
+          position: absolute;
+          right: 2px;
+          top: 0;
+          display: inline;
+          font-size: 14px;
+          color: red;
+          vertical-align: middle;
+          margin: 0;
+          line-height: 30px;
+        }
+      }
+    }
+  }
+</style>
 <script>
+  import Vue from 'vue';
   const getId = function getId(prefix) {
     const pre = prefix || '';
     function s4() {
@@ -9,13 +56,74 @@
     };
     return (resultFunc)();
   };
+  const id = getId('form-');
+  Vue.directive('render-form-item', {
+    params: ['data'],
+    update: function update() {
+      const self = this;
+      const selfElem = self.el;
+      const data = self.params.data;
+      let renderTimeout = null;
+      const renderFunc = function renderFunc() {
+        let i = 0;
+        let tempItem = null;
+        const len = data.length;
+        let itemType = null;
+        for (i; i < len; i++) {
+          tempItem = data[i];
+          itemType = tempItem.type;
+          switch (itemType) {
+            case 'text':
+              selfElem.innerHTML += `<f-text :data="coms['${id}'].items[${i}]"></f-text>`;
+              break;
+//            case 'phonenum':
+//              selfElem.innerHTML += `<f-phone :data="components.current[${i}]"></f-phone>`;
+//              break;
+//            case 'radio':
+//              selfElem.innerHTML += `<f-radio :data="components.current[${i}]"></f-radio>`;
+//              break;
+//            case 'select':
+//              selfElem.innerHTML += `<f-select :data="components.current[${i}]"></f-select>`;
+//              break;
+//            case 'verifycode':
+//              selfElem.innerHTML += `<f-code :data="components.current[${i}]"></f-code>`;
+//              break;
+//            case 'textarea':
+//              selfElem.innerHTML += `<f-textarea :data="components.current[${i}]"></f-textarea>`;
+//              break;
+            default :
+              break;
+          }
+        }
+        self.vm.$compile(selfElem);
+        clearTimeout(renderTimeout);
+      };
+      renderTimeout = setTimeout(renderFunc, 20);
+    },
+  });
+
+  const fText = Vue.extend({
+    props: ['data'],
+    template: `
+      <div class="row m0 p0">
+        <div class="col-xs-12 form-item">
+          <input type="text" :required="data.required" :name="data.name"
+            :placeholder="data.placeholder">
+          <p class="check-status" v-show="data.required">*</p>
+        </div>
+      </div>
+    `,
+  });
+
+  Vue.component('f-text', fText);
+
   const template = {
     type: 'com-form',
     title: '表单',
     icon: 'icon-font',
     desc: '',
     allowBorder: true,
-    class: 'animated',
+    className: 'animated',
     animation: {
       name: '',               // 动画的class名
       delay: 0,              // 动画延迟加载时间
@@ -94,7 +202,7 @@
       // 'none': 无; 'underline' 下划线; ('line-through' 贯穿线; 'overline': 上划线 暂不支持)
       textDecoration: 'none',
       borderRadius: '0px',
-      backgroundColor: 'rgba(0, 0, 0, 0.4)',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
       transform: 'rotate(0)',
       webkitTransform: 'rotate(0)',
       mozTransform: 'rotate(0)',
@@ -105,19 +213,33 @@
       borderColor: '#c8c8c8',
     },
   };
-  const id = getId('form-');
+
   export default {
     data() {
       this.init();
       return {
         template: {},
         contentTemplate: `
-          <div class='render k-component' id='content-${id}' v-hover.literal='这是一个表单组件'>
-            <p style='color: red;'>DEMO!</p>
+          <div class='k-component' id='content-${id}'
+              style='margin: 0; position: absolute;'
+              :style='{
+                "width": coms["${id}"].defaultStyle.width,
+                "height": coms["${id}"].defaultStyle.height
+                }'
+              v-hover.literal='这是一个表单组件'>
+            <div class="form-mask" :style='[coms["${id}"].defaultStyle]'>
+              <form method="post">
+                <div class="form-items">
+                  <div :data='coms["${id}"].items' v-render-form-item></div>
+                </div>
+              </form>
+            </div>
           </div>
         `,
         configTemplate: `
-          <div class='config' id='config-${id}'></div>
+          <div class='config' id='config-${id}'>
+            <input v-model='coms["${id}"].title'>
+          </div>
         `,
       };
     },
@@ -140,12 +262,15 @@
       },
       create: function create(data) {
         this.$dispatch('add-component', data);
+        this.$parent.coms[id] = data;
         this.render(data);
       },
       render: function render() {
         const templateHtml = this.contentTemplate;
+        const templateConfig = this.configTemplate;
         this.closeAllPopup();
         this.$dispatch('show-component', templateHtml);
+        this.$dispatch('show-config', templateConfig);
       },
     },
     events: {

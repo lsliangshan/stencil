@@ -18,7 +18,7 @@
     align-items: center;
     justify-content: center;
     #scene {
-      /*width: 320px;*/
+      position: relative;
       height: 80%;
       background-color: green;
       background-repeat: no-repeat;
@@ -54,6 +54,9 @@
       },
       sTemplates: function sTemplates() {
         return this.$parent.sTemplates;
+      },
+      coms: function coms() {
+        return this.$parent.coms;
       },
     },
     components: {

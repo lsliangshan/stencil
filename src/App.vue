@@ -145,6 +145,9 @@ export default {
     'show-component': function showComponent(content) {
       this.appendComponent(content);
     },
+    'show-config': function showConfig(content) {
+      this.$broadcast('append-config', content);
+    },
   },
 };
 </script>
