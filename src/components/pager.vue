@@ -47,6 +47,7 @@
       overflow-x: hidden;
       overflow-y: auto;
       background-color: #e6e6e6;
+      margin-bottom: 0;
       li {
         width: 100%;
         height: 150px;
@@ -173,7 +174,7 @@
         return this.$parent.sTemplates;
       },
       activePage: function activePage() {
-        return this.$parent.active;
+        return this.$parent.pages.active;
       },
     },
     components: {
@@ -203,7 +204,7 @@
          * 选择某一页
          * index: 待选择页面的索引值
          */
-        this.$parent.active = index;
+        this.$parent.pages.active = index;
       },
       swiftUp: function swiftUp(index) {
         /**
@@ -242,11 +243,11 @@
               type: 'error',
             });
           } else {
-            if (index === self.$parent.active) {
+            if (index === self.$parent.pages.active) {
               if (index === 0) {
-                self.$parent.active = 0;
+                self.$parent.pages.active = 0;
               } else {
-                self.$parent.active -= 1;
+                self.$parent.pages.active -= 1;
               }
             }
             self.$parent.sTemplates.pages.splice(index, 1);
@@ -269,7 +270,7 @@
         const sTemplates = this.$parent.sTemplates;
         sTemplates.pages.splice(index, 0, sTemplates.pages[index]);
         const changeActive = function changeActive() {
-          self.$parent.active = index + 1;
+          self.$parent.pages.active = index + 1;
         };
         setTimeout(changeActive, 20);
       },
@@ -279,14 +280,14 @@
          * 在当前页后新增一页
          * 默认新增一页背景色为#FFF的页面
          */
-        this.$parent.sTemplates.pages.splice(this.$parent.active + 1, 0, {
+        this.$parent.sTemplates.pages.splice(this.$parent.pages.active + 1, 0, {
           bg: {
             type: 'color',   // color: 背景色, image: 背景图
             value: '#FFF',  // 背景 色值或图片地址
           },
           components: [],
         });
-        this.$parent.active += 1;
+        this.$parent.pages.active += 1;
       },
     },
   };

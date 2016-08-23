@@ -53,7 +53,7 @@
     },
     computed: {
       activePage: function activePage() {
-        return this.$parent.active;
+        return this.$parent.pages.active;
       },
       sTemplates: function sTemplates() {
         return this.$parent.sTemplates;

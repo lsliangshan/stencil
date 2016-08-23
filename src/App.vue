@@ -48,8 +48,12 @@ export default {
 //        },
       ],   // 组件库里的组件
       coms: {},
-      pagers: {
-        active: 0,
+      comCurrent: {
+        active: 0,  // 当前激活状态的组件的索引值, -1 表示激活页面背景
+        data: {},    // 当前激活状态的组件的数据
+      },
+      pages: {
+        active: 0,    // 当前页面索引值
       },
       sTemplates: {   // 模板数据
         pages: [
@@ -70,7 +74,6 @@ export default {
         ],
         bgAnimation: '',    // 背景切换动画
       },
-      active: 0,    // 当前页面索引值
     };
   },
   methods: {
@@ -140,7 +143,13 @@ export default {
       this.sTemplates = data;
     },
     'add-component': function updateTemplates(data) {
-      this.sTemplates.pages[this.active].components.push(data);
+      this.sTemplates.pages[this.pages.active].components.push(data);
+      this.comCurrent.data = data;
+      this.comCurrent.active = this.sTemplates.pages[this.pages.active].components.length - 1;
+      this.$broadcast('set-config-header', {
+        icon: data.icon,
+        title: data.title,
+      });
     },
     'show-component': function showComponent(content) {
       this.appendComponent(content);

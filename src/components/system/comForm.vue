@@ -211,7 +211,7 @@
   const template = {
     type: 'com-form',
     title: '表单',
-    icon: 'icon-font',
+    icon: 'th-list',
     desc: '',
     allowBorder: true,
     className: 'animated',
