@@ -86,6 +86,16 @@
       }
     }
   }
+
+  .form-config-item-select {
+    width: 100%;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 8px;
+    outline: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
 </style>
 <script>
   import Vue from 'vue';
@@ -305,10 +315,164 @@
     },
   };
 
+  const allFormItems = [
+    {
+      label: '姓名',
+      name: 'username',
+      type: 'text',
+      placeholder: '请输入姓名',
+      available: 0,           // 控件还能被添加几次
+      required: true,     // 是否必填
+      ban: {
+        change: false,
+        remove: false,
+        cancel: false,
+      },
+    },
+    {
+      label: '手机号',
+      name: 'phonenum',
+      type: 'phonenum',
+      placeholder: '请输入手机号码',
+      available: 0,           // 控件还能被添加几次
+      required: true,
+      validation: [
+        {
+          regexp: /^1[34578]\\\d{9}$/,
+          message: '手机号不正确',
+        },
+      ],
+      ban: {
+        change: true,       // 禁止切换类型
+        remove: true,       // 禁止删除
+        cancel: true,        // 禁止取消 必填
+      },
+    },
+    {
+      label: '验证码',
+      name: 'verifycode',
+      type: 'verifycode',
+      placeholder: '验证码',
+      available: 0,           // 控件还能被添加几次
+      required: false,
+      ban: {
+        change: false,
+        remove: false,
+        cancel: false,
+      },
+    },
+    {
+      label: '邮箱',
+      name: 'email',
+      type: 'text',
+      placeholder: '请输入邮箱',
+      available: 1,           // 控件还能被添加几次
+      required: false,
+      validation: [
+        {
+          regexp: /^(\\\w)+(\\\.\\\w+)*@(\\\w)+((\\\.\\\w+)+)$/,
+          message: '邮箱不正确',
+        },
+      ],
+      ban: {
+        change: false,
+        remove: false,
+        cancel: false,
+      },
+    },
+    {
+      label: '地址',
+      name: 'address',
+      type: 'text',
+      placeholder: '请输入地址',
+      available: 1,           // 控件还能被添加几次
+      required: false,
+      ban: {
+        change: false,
+        remove: false,
+        cancel: false,
+      },
+    },
+    {
+      label: '性别',
+      name: 'sex',
+      type: 'radio',
+      available: 1,           // 控件还能被添加几次
+      options: [
+        {
+          value: '男',
+          label: '男',
+        },
+        {
+          value: '女',
+          label: '女',
+        },
+      ],
+      activated: 0,
+      required: false,
+      ban: {
+        change: false,
+        remove: false,
+        cancel: false,
+      },
+    },
+    {
+      label: '留言',
+      name: 'feedback',
+      type: 'textarea',
+      placeholder: '请输入您的留言',
+      available: 1,           // 控件还能被添加几次
+      required: false,
+      ban: {
+        change: false,
+        remove: false,
+        cancel: false,
+      },
+    },
+    {
+      label: '自定义',
+      name: 'customs',
+      type: 'text',
+      placeholder: '请输入自定义内容',
+      available: 99,           // 控件还能被添加几次
+      required: false,
+      ban: {
+        change: false,
+        remove: false,
+        cancel: false,
+      },
+    },
+    {
+      label: '单选',
+      name: 'select',
+      type: 'select',
+      placeholder: '单选',
+      multiSelect: false,      // 是否为多选
+      available: 99,           // 控件还能被添加几次
+      options: [
+        {
+          label: '选项一',
+          value: '选项一',
+        },
+        {
+          label: '选项二',
+          value: '选项二',
+        },
+      ],
+      required: false,
+      ban: {
+        change: false,
+        remove: false,
+        cancel: false,
+      },
+    },
+  ];
+
   export default {
     data() {
       this.init();
       return {
+        formItems: allFormItems,
         template: {},
         contentTemplate: `
           <div class='k-component' id='content-${id}'
@@ -337,7 +501,27 @@
         `,
         configTemplate: `
           <div class='config' id='config-${id}'>
-            <input v-model='coms["${id}"].submit.bgColor'>
+            <div class="row m0 p0" v-for="item in coms['${id}'].items" track-by="$index">
+              <div class="col-xs-1 m0 p0">
+                <input type="checkbox" :disabled="item.ban.change"
+                  v-hover="item.ban.cancel?'必填,不能修改':'是否必填'"
+                  :checked="item.required || item.ban.cancel"
+                  @click="item.required=!item.required"
+                  :style="{'cursor': item.ban.change?'not-allowed':'pointer'}">
+              </div>
+              <div class="col-xs-3 m0 p0">
+                <select class="form-config-item-select" :data-index="$index"
+                  :disabled="item.ban.change"
+                  :style="{'cursor': item.ban.change?'not-allowed':'pointer'}"
+                  >
+                  <option v-for="option in formItems" :value="option.label"
+                     :selected="option.label==item.label"
+                     v-show="item.ban.change || !option.ban.change"
+                     v-text="option.label"
+                  ></option>
+                </select>
+              </div>
+            </div>
           </div>
         `,
       };

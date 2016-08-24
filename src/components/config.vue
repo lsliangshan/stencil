@@ -31,7 +31,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #e6e6e6;
+      background-color: #eee;
       border-bottom: 1px solid #c8c8c8;
       svg {
         width: 18px;
@@ -47,6 +47,7 @@
     .custom-config {
       width: 100%;
       height: auto;
+      padding: 15px;
     }
     .public-config {
       width: 100%;
@@ -90,7 +91,7 @@
     events: {
       'append-config': function appenComponent(content) {
         const config = document.querySelector('.g-config .custom-config');
-        config.innerHTML += content;
+        config.innerHTML = content;
         this.$compile(config);
       },
       'set-config-header': function setConfigHeader(data) {
