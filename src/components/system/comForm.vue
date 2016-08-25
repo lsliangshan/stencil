@@ -601,7 +601,12 @@
             </div>
             <div class="row m0 p0">
               <div class="col-xs-4 m0 p0">
-                <a href="javascript:void(0)" :disabled=""></a>
+                <a href="javascript:void(0)" class="btn btn-primary btn-sm form-item-add"
+                  @click="coms['${id}'].addItem()"
+          :disabled="sTemplates.pages[pages.active].components[comCurrent.active].items.length>=10"
+                  >
+                  添加字段
+                </a>
               </div>
             </div>
           </div>
@@ -625,9 +630,41 @@
         this.$parent.addComponent(data);
       },
       create: function create(data) {
+        const self = this;
+//        const sTemplates = this.$parent.sTemplates;
+//        const pages = this.$parent.pages;
+//        const comCurrent = this.$parent.comCurrent;
         this.$dispatch('add-component', data);
         this.$parent.coms[id] = data;
         this.$parent.coms[id].allFormItems = allFormItems;
+        this.$parent.coms[id].addItem = function addItem() {
+          self.$parent.coms[id].items.push({
+            label: '姓名',
+            name: 'username',
+            type: 'text',
+            placeholder: '请输入姓名',
+            available: 1,           // 控件还能被添加几次
+            required: true,     // 是否必填
+            ban: {
+              change: false,
+              remove: false,
+              cancel: false,
+            },
+          });
+//          sTemplates.pages[pages.active].components[comCurrent.active].items.push({
+//            label: '自定义',
+//            name: 'customs',
+//            type: 'text',
+//            placeholder: '请输入自定义内容',
+//            available: 99,           // 控件还能被添加几次
+//            required: false,
+//            ban: {
+//              change: false,
+//              remove: false,
+//              cancel: false,
+//            },
+//          });
+        };
         this.render(data);
       },
       render: function render() {
