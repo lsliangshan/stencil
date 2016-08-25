@@ -7,7 +7,7 @@
 </template>
 <style lang="scss" scoped>
   #editor {
-    width: calc(100% - 414px);
+    width: calc(100% - 470px);
     height: calc(100% - 52px);
     display: flex;
     background-color: lightgray;

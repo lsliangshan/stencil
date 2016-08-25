@@ -12,10 +12,10 @@
 </template>
 <style lang="scss" scoped>
   .g-config {
-    width: 264px;
+    width: 320px;
     height: calc(100% - 52px);
     display: inline-block;
-    background-color: lightblue;
+    background-color: #eee;
     position: absolute;
     right: 0;
     top: 52px;
@@ -48,6 +48,7 @@
       width: 100%;
       height: auto;
       padding: 15px;
+      background-color: #fff;
     }
     .public-config {
       width: 100%;

@@ -5,6 +5,9 @@
   .p0 {
     padding: 0;
   }
+  .mt4 {
+    margin-bottom: 4px;
+  }
   .form-mask {
     width: 100%;
     height: 100%;
@@ -95,6 +98,67 @@
     outline: none;
     border: 1px solid #ccc;
     border-radius: 4px;
+  }
+  .config-placeholder {
+    input {
+      width: 100%;
+      height: 24px;
+      line-height: 24px;
+      padding: 0 8px;
+      outline: none;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    a {
+      display: inline-flex;
+      margin: 0 10%;
+      width: 80%;
+      height: 24px;
+      line-height: 24px;
+      padding: 0 8px;
+      outline: none;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      background-color: #fff;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  .form-config-delete {
+    /*margin-left: 8px;*/
+    height: 24px;
+    line-height: 24px;
+    width: 24px;
+    display: inline-flex;
+    color: #888;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    svg {
+      width: 20px;
+      height: 20px;
+      &:hover {
+        color: #d77490;
+      }
+    }
+  }
+  .form-config-setting {
+    margin-left: 8px;
+    height: 24px;
+    line-height: 24px;
+    width: 24px;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid #c9c9c9;
+    color: #888;
+    border-radius: 3px;
+    cursor: pointer;
+    &:hover {
+      color: #71cc79;
+      border: 1px solid #71cc79;
+    }
   }
 </style>
 <script>
@@ -472,7 +536,6 @@
     data() {
       this.init();
       return {
-        formItems: allFormItems,
         template: {},
         contentTemplate: `
           <div class='k-component' id='content-${id}'
@@ -501,7 +564,7 @@
         `,
         configTemplate: `
           <div class='config' id='config-${id}'>
-            <div class="row m0 p0" v-for="item in coms['${id}'].items" track-by="$index">
+            <div class="row m0 p0 mt4" v-for="item in coms['${id}'].items" track-by="$index">
               <div class="col-xs-1 m0 p0">
                 <input type="checkbox" :disabled="item.ban.change"
                   v-hover="item.ban.cancel?'必填,不能修改':'是否必填'"
@@ -514,12 +577,31 @@
                   :disabled="item.ban.change"
                   :style="{'cursor': item.ban.change?'not-allowed':'pointer'}"
                   >
-                  <option v-for="option in formItems" :value="option.label"
+                  <option v-for="option in coms['${id}'].allFormItems" :value="option.label"
                      :selected="option.label==item.label"
                      v-show="item.ban.change || !option.ban.change"
                      v-text="option.label"
                   ></option>
                 </select>
+              </div>
+              <div class="col-xs-7 m0 p0 config-placeholder"
+                v-if="item.type=='text' || item.type=='textarea'
+                  || item.type=='phonenum' || item.type=='verifycode'">
+                <input type="text" v-model="item.placeholder">
+              </div>
+              <div class="col-xs-7 m0 p0" v-if="item.type=='radio'"></div>
+              <div class="col-xs-7 m0 p0 config-placeholder" v-if="item.type=='select'">
+                <a href="javascript:void(0)">
+                  <icon name="cog"></icon>设置选项
+                </a>
+              </div>
+              <div class="col-xs-1 m0 p0 form-config-delete" v-if="!item.ban.remove">
+                <icon name="trash-o"></icon>
+              </div>
+            </div>
+            <div class="row m0 p0">
+              <div class="col-xs-4 m0 p0">
+                <a href="javascript:void(0)" :disabled=""></a>
               </div>
             </div>
           </div>
@@ -545,6 +627,7 @@
       create: function create(data) {
         this.$dispatch('add-component', data);
         this.$parent.coms[id] = data;
+        this.$parent.coms[id].allFormItems = allFormItems;
         this.render(data);
       },
       render: function render() {
