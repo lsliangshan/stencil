@@ -176,47 +176,75 @@
   const id = getId('form-');
   Vue.directive('render-form-item', {
     params: ['data'],
-    update: function update() {
+    update: function update(value) {
       const self = this;
       const selfElem = self.el;
-      const data = self.params.data;
-      let renderTimeout = null;
-      const renderFunc = function renderFunc() {
-        let i = 0;
-        let tempItem = null;
-        const len = data.length;
-        let itemType = null;
-        for (i; i < len; i++) {
-          tempItem = data[i];
-          itemType = tempItem.type;
-          switch (itemType) {
-            case 'text':
-              selfElem.innerHTML += `<f-text :data="coms['${id}'].items[${i}]"></f-text>`;
-              break;
-            case 'phonenum':
-              selfElem.innerHTML += `<f-phone :data="coms['${id}'].items[${i}]"></f-phone>`;
-              break;
+      let itemType = null;
+      if (!value) {
+        const data = self.params.data;
+        let renderTimeout = null;
+        const renderFunc = function renderFunc() {
+          let i = 0;
+          let tempItem = null;
+          const len = data.length;
+          for (i; i < len; i++) {
+            tempItem = data[i];
+            itemType = tempItem.type;
+            switch (itemType) {
+              case 'text':
+                selfElem.innerHTML += `<f-text :data="coms['${id}'].items[${i}]"></f-text>`;
+                break;
+              case 'phonenum':
+                selfElem.innerHTML += `<f-phone :data="coms['${id}'].items[${i}]"></f-phone>`;
+                break;
 //            case 'radio':
 //              selfElem.innerHTML += `<f-radio :data="coms['${id}'].items[${i}]"></f-radio>`;
 //              break;
 //            case 'select':
 //              selfElem.innerHTML += `<f-select :data="coms['${id}'].items[${i}]"></f-select>`;
 //              break;
-            case 'verifycode':
-              selfElem.innerHTML += `<f-code :data-color="coms['${id}'].submit.bgColor"
+              case 'verifycode':
+                selfElem.innerHTML += `<f-code :data-color="coms['${id}'].submit.bgColor"
                           :data="coms['${id}'].items[${i}]"></f-code>`;
-              break;
+                break;
 //            case 'textarea':
 //              selfElem.innerHTML += `<f-textarea :data="coms['${id}'].items[${i}]"></f-textarea>`;
 //              break;
-            default :
-              break;
+              default :
+                break;
+            }
           }
+          self.vm.$compile(selfElem);
+          clearTimeout(renderTimeout);
+        };
+        renderTimeout = setTimeout(renderFunc, 20);
+      } else {
+        itemType = value.type;
+        switch (itemType) {
+          case 'text':
+            selfElem.innerHTML += `<f-text data="${value}"></f-text>`;
+            break;
+          case 'phonenum':
+            selfElem.innerHTML += `<f-phone data="${value}"></f-phone>`;
+            break;
+//            case 'radio':
+//              selfElem.innerHTML += `<f-radio :data="coms['${id}'].items[${i}]"></f-radio>`;
+//              break;
+//            case 'select':
+//              selfElem.innerHTML += `<f-select :data="coms['${id}'].items[${i}]"></f-select>`;
+//              break;
+          case 'verifycode':
+            selfElem.innerHTML += `<f-code :data-color="coms['${id}'].submit.bgColor"
+                          data="${value}"></f-code>`;
+            break;
+//            case 'textarea':
+//              selfElem.innerHTML += `<f-textarea :data="coms['${id}'].items[${i}]"></f-textarea>`;
+//              break;
+          default :
+            break;
         }
         self.vm.$compile(selfElem);
-        clearTimeout(renderTimeout);
-      };
-      renderTimeout = setTimeout(renderFunc, 20);
+      }
     },
   });
 
@@ -548,7 +576,9 @@
             <div class="form-mask" :style='[coms["${id}"].defaultStyle]'>
               <form method="post">
                 <div class="form-items">
-                  <div :data='coms["${id}"].items' v-render-form-item></div>
+                  <div :data='coms["${id}"].items'
+                    class="form-items-container"
+                    v-render-form-item="coms['${id}'].newItem"></div>
                   <slot>
                     <f-submit :data="coms['${id}'].submit"></f-submit>
                   </slot>
@@ -637,20 +667,22 @@
         this.$dispatch('add-component', data);
         this.$parent.coms[id] = data;
         this.$parent.coms[id].allFormItems = allFormItems;
+        const newItem = {
+          label: '姓名',
+          name: 'username',
+          type: 'text',
+          placeholder: '请输入姓名',
+          available: 1,           // 控件还能被添加几次
+          required: true,     // 是否必填
+          ban: {
+            change: false,
+            remove: false,
+            cancel: false,
+          },
+        };
         this.$parent.coms[id].addItem = function addItem() {
-          self.$parent.coms[id].items.push({
-            label: '姓名',
-            name: 'username',
-            type: 'text',
-            placeholder: '请输入姓名',
-            available: 1,           // 控件还能被添加几次
-            required: true,     // 是否必填
-            ban: {
-              change: false,
-              remove: false,
-              cancel: false,
-            },
-          });
+          self.$parent.coms[id].items.push(newItem);
+          self.$parent.coms[id].newItem = newItem;
 //          sTemplates.pages[pages.active].components[comCurrent.active].items.push({
 //            label: '自定义',
 //            name: 'customs',
